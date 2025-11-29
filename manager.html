@@ -1,0 +1,924 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Панель менеджера - X5 Tech Platform</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Ваши существующие стили остаются без изменений */
+        :root {
+            --primary: #9ACD32;
+            --primary-dark: #b698fa;
+            --secondary: #b698fa;
+            --light: #f9f9f9;
+            --dark: #333;
+            --card-bg: #ffffff;
+            --shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            --transition: all 0.3s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            color: var(--dark);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Header Styles */
+        header {
+            background: var(--card-bg);
+            box-shadow: var(--shadow);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 0;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .logo-img {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 20px;
+        }
+
+        .logo-text {
+            font-size: 24px;
+            font-weight: 700;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 30px;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--dark);
+            font-weight: 500;
+            transition: var(--transition);
+            position: relative;
+        }
+
+        .nav-links a:hover {
+            color: var(--primary);
+        }
+
+        .back-btn {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 4px 10px rgba(154, 205, 50, 0.3);
+            text-decoration: none;
+        }
+
+        .back-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 15px rgba(154, 205, 50, 0.4);
+        }
+
+        /* Main Content */
+        .manager-dashboard {
+            padding: 40px 0;
+        }
+
+        .dashboard-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .dashboard-header h1 {
+            font-size: 36px;
+            margin-bottom: 10px;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        .dashboard-card {
+            background: var(--card-bg);
+            padding: 25px;
+            border-radius: 16px;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+        }
+
+        .dashboard-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+        }
+
+        .dashboard-card h2 {
+            font-size: 22px;
+            margin-bottom: 20px;
+            color: var(--dark);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .dashboard-card h2 i {
+            color: var(--primary);
+        }
+
+        /* Statistics */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .stat-item {
+            background: var(--light);
+            padding: 15px;
+            border-radius: 12px;
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            font-size: 14px;
+            color: #666;
+        }
+
+        /* Students Table */
+        .students-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+
+        .students-table th,
+        .students-table td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #eee;
+        }
+
+        .students-table th {
+            background: var(--light);
+            font-weight: 600;
+            color: var(--dark);
+        }
+
+        .students-table tr:hover {
+            background: var(--light);
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: #eee;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary), var(--primary-dark));
+            border-radius: 4px;
+        }
+
+        /* Quiz Form */
+        .quiz-form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .form-group label {
+            font-weight: 500;
+        }
+
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: var(--transition);
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus,
+        .form-group select:focus {
+            border-color: var(--primary);
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(154, 205, 50, 0.2);
+        }
+
+        .form-group textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        .submit-btn {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            box-shadow: 0 4px 10px rgba(154, 205, 50, 0.3);
+            margin-top: 10px;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 15px rgba(154, 205, 50, 0.4);
+        }
+
+        /* Quiz List */
+        .quiz-list {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .quiz-item {
+            background: var(--light);
+            padding: 15px;
+            border-radius: 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .quiz-info h3 {
+            font-size: 18px;
+            margin-bottom: 5px;
+        }
+
+        .quiz-info p {
+            font-size: 14px;
+            color: #666;
+        }
+
+        .quiz-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .action-btn {
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+            transition: var(--transition);
+            padding: 8px;
+            border-radius: 6px;
+        }
+
+        .edit-btn {
+            color: var(--primary);
+        }
+
+        .edit-btn:hover {
+            background: rgba(154, 205, 50, 0.1);
+        }
+
+        .delete-btn {
+            color: #ff4757;
+        }
+
+        .delete-btn:hover {
+            background: rgba(255, 71, 87, 0.1);
+        }
+
+        /* Floating Elements */
+        .floating-elements {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        .floating-element {
+            position: absolute;
+            width: 40px;
+            height: 40px;
+            background: rgba(154, 205, 50, 0.2);
+            border-radius: 50%;
+            animation: float 15s infinite linear;
+        }
+
+        .floating-element:nth-child(2) {
+            width: 60px;
+            height: 60px;
+            background: rgba(255, 105, 180, 0.2);
+            top: 20%;
+            left: 80%;
+            animation-duration: 20s;
+        }
+
+        .floating-element:nth-child(3) {
+            width: 30px;
+            height: 30px;
+            background: rgba(154, 205, 50, 0.3);
+            top: 70%;
+            left: 10%;
+            animation-duration: 25s;
+        }
+
+        .quiz-stats {
+            display: flex;
+            gap: 15px;
+            margin-top: 8px;
+            flex-wrap: wrap;
+        }
+
+        .stat {
+            font-size: 12px;
+            color: #666;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .stat i {
+            font-size: 10px;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 20px;
+            color: #666;
+        }
+
+        .error {
+            background: #ffebee;
+            color: #c62828;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 10px 0;
+            border-left: 4px solid #c62828;
+        }
+
+        .success {
+            background: #e8f5e9;
+            color: #2e7d32;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 10px 0;
+            border-left: 4px solid #2e7d32;
+        }
+
+        /* Адаптивность для мобильных устройств */
+        @media (max-width: 768px) {
+            .quiz-stats {
+                flex-direction: column;
+                gap: 5px;
+            }
+            
+            .quiz-item {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .quiz-actions {
+                margin-top: 10px;
+                align-self: flex-end;
+            }
+
+            .header-content {
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            .nav-links {
+                gap: 15px;
+            }
+            
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .students-table {
+                font-size: 14px;
+            }
+            
+            .students-table th,
+            .students-table td {
+                padding: 8px 10px;
+            }
+        }
+
+        @keyframes float {
+            0% {
+                transform: translate(0, 0) rotate(0deg);
+            }
+            25% {
+                transform: translate(20px, 50px) rotate(90deg);
+            }
+            50% {
+                transform: translate(0, 100px) rotate(180deg);
+            }
+            75% {
+                transform: translate(-20px, 50px) rotate(270deg);
+            }
+            100% {
+                transform: translate(0, 0) rotate(360deg);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="floating-elements">
+        <div class="floating-element"></div>
+        <div class="floating-element"></div>
+        <div class="floating-element"></div>
+    </div>
+
+    <!-- Header -->
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <div class="logo-img">X5</div>
+                    <div class="logo-text">X5 Tech Platform</div>
+                </div>
+                <div class="nav-links">
+                    <span>Панель менеджера</span>
+                </div>
+                <a href="main.html" class="back-btn">
+                    <i class="fas fa-arrow-left"></i>
+                    На главную
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Manager Dashboard -->
+    <section class="manager-dashboard">
+        <div class="container">
+            <div class="dashboard-header">
+                <h1>Панель управления</h1>
+                <p>Управление студентами, тестами и аналитика</p>
+            </div>
+
+            <div class="dashboard-grid">
+                <!-- Статистика -->
+                <div class="dashboard-card">
+                    <h2><i class="fas fa-chart-bar"></i> Общая статистика</h2>
+                    <div id="statsLoading" class="loading">
+                        <i class="fas fa-spinner fa-spin"></i> Загрузка статистики...
+                    </div>
+                    <div class="stats-grid" id="statsGrid" style="display: none;">
+                        <div class="stat-item">
+                            <div class="stat-value" id="totalStudents">0</div>
+                            <div class="stat-label">Всего студентов</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value" id="activeStudents">0</div>
+                            <div class="stat-label">Активных</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value" id="totalQuizzes">0</div>
+                            <div class="stat-label">Всего тестов</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value" id="avgScore">0%</div>
+                            <div class="stat-label">Средний балл</div>
+                        </div>
+                    </div>
+                    <div id="statsError" class="error" style="display: none;"></div>
+                </div>
+
+                <!-- Список студентов -->
+                <div class="dashboard-card">
+                    <h2><i class="fas fa-users"></i> Список студентов</h2>
+                    <div id="studentsLoading" class="loading">
+                        <i class="fas fa-spinner fa-spin"></i> Загрузка данных студентов...
+                    </div>
+                    <div class="table-container" id="studentsTable" style="display: none;">
+                        <table class="students-table">
+                            <thead>
+                                <tr>
+                                    <th>Имя</th>
+                                    <th>Баллы</th>
+                                    <th>Прогресс</th>
+                                    <th>Статус</th>
+                                </tr>
+                            </thead>
+                            <tbody id="studentsTableBody">
+                                <!-- Данные будут загружены динамически -->
+                            </tbody>
+                        </table>
+                    </div>
+                    <div id="studentsError" class="error" style="display: none;"></div>
+                </div>
+
+                <!-- Добавление теста -->
+                <div class="dashboard-card">
+                    <h2><i class="fas fa-plus-circle"></i> Добавить новый тест</h2>
+                    <form class="quiz-form" id="quizForm">
+                        <div class="form-group">
+                            <label for="quizTitle">Название теста</label>
+                            <input type="text" id="quizTitle" placeholder="Введите название теста" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="quizDescription">Описание</label>
+                            <textarea id="quizDescription" placeholder="Введите описание теста" required></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="quizPoints">Баллы за прохождение</label>
+                            <input type="number" id="quizPoints" placeholder="Введите количество баллов" min="1" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="quizDifficulty">Сложность</label>
+                            <select id="quizDifficulty" required>
+                                <option value="">Выберите сложность</option>
+                                <option value="easy">Легкий</option>
+                                <option value="medium">Средний</option>
+                                <option value="hard">Сложный</option>
+                            </select>
+                        </div>
+                        <button type="submit" class="submit-btn">
+                            <i class="fas fa-save"></i>
+                            Создать тест
+                        </button>
+                    </form>
+                    <div id="formSuccess" class="success" style="display: none;"></div>
+                </div>
+
+                <!-- Список тестов -->
+                <div class="dashboard-card">
+                    <h2><i class="fas fa-list"></i> Существующие тесты</h2>
+                    <div id="quizzesLoading" class="loading">
+                        <i class="fas fa-spinner fa-spin"></i> Загрузка тестов...
+                    </div>
+                    <div class="quiz-list" id="quizList" style="display: none;">
+                        <!-- Тесты будут загружены динамически -->
+                    </div>
+                    <div id="quizzesError" class="error" style="display: none;"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        // Глобальные переменные для хранения данных
+        let students = [];
+        let quizzes = [];
+
+        // Демо-данные по умолчанию
+        const defaultStudents = [
+            { id: 1, name: "Иван Иванов", points: 150, progress: 75, status: "Активный" },
+            { id: 2, name: "Мария Петрова", points: 200, progress: 90, status: "Активный" },
+            { id: 3, name: "Алексей Сидоров", points: 50, progress: 25, status: "Новичок" },
+            { id: 4, name: "Елена Козлова", points: 180, progress: 85, status: "Активный" },
+            { id: 5, name: "Дмитрий Волков", points: 75, progress: 40, status: "Начинающий" }
+        ];
+
+        const defaultQuizzes = [
+            { 
+                id: 1, 
+                title: "Основы цифровых технологий", 
+                description: "Проверка базовых знаний о цифровых технологиях и IT-инфраструктуре", 
+                points: 50, 
+                difficulty: "easy",
+                students_passed: 45,
+                avg_score: 82
+            },
+            { 
+                id: 2, 
+                title: "Продвинутые алгоритмы", 
+                description: "Тест на знание сложных алгоритмов и структур данных", 
+                points: 100, 
+                difficulty: "hard",
+                students_passed: 12,
+                avg_score: 65
+            }
+        ];
+
+        // Инициализация панели управления
+        document.addEventListener('DOMContentLoaded', async function() {
+            await loadAllData();
+            
+            // Обработка формы добавления теста
+            document.getElementById('quizForm').addEventListener('submit', function(e) {
+                e.preventDefault();
+                addNewQuiz();
+            });
+        });
+
+        // Загрузка всех данных
+        async function loadAllData() {
+            try {
+                // Сразу показываем демо-данные для быстрой загрузки
+                students = [...defaultStudents];
+                quizzes = [...defaultQuizzes];
+                
+                // Пытаемся загрузить данные из localStorage (если есть сохраненные)
+                loadFromLocalStorage();
+                
+                updateStatistics();
+                renderStudentsTable();
+                renderQuizList();
+                
+                // Скрываем loading и показываем контент
+                hideAllLoading();
+                showAllContent();
+                
+            } catch (error) {
+                console.error('Ошибка загрузки данных:', error);
+                // В случае ошибки все равно используем демо-данные
+                handleFallbackData();
+            }
+        }
+
+        // Загрузка данных из localStorage
+        function loadFromLocalStorage() {
+            try {
+                const savedStudents = localStorage.getItem('managerStudents');
+                const savedQuizzes = localStorage.getItem('managerQuizzes');
+                
+                if (savedStudents) {
+                    const parsedStudents = JSON.parse(savedStudents);
+                    if (parsedStudents.length > 0) {
+                        students = parsedStudents;
+                    }
+                }
+                
+                if (savedQuizzes) {
+                    const parsedQuizzes = JSON.parse(savedQuizzes);
+                    if (parsedQuizzes.length > 0) {
+                        quizzes = parsedQuizzes;
+                    }
+                }
+            } catch (error) {
+                console.error('Ошибка загрузки из localStorage:', error);
+            }
+        }
+
+        // Сохранение данных в localStorage
+        function saveToLocalStorage() {
+            try {
+                localStorage.setItem('managerStudents', JSON.stringify(students));
+                localStorage.setItem('managerQuizzes', JSON.stringify(quizzes));
+            } catch (error) {
+                console.error('Ошибка сохранения в localStorage:', error);
+            }
+        }
+
+        // Скрыть все индикаторы загрузки
+        function hideAllLoading() {
+            document.getElementById('studentsLoading').style.display = 'none';
+            document.getElementById('quizzesLoading').style.display = 'none';
+            document.getElementById('statsLoading').style.display = 'none';
+        }
+
+        // Показать весь контент
+        function showAllContent() {
+            document.getElementById('studentsTable').style.display = 'block';
+            document.getElementById('quizList').style.display = 'block';
+            document.getElementById('statsGrid').style.display = 'grid';
+        }
+
+        // Обработка запасных данных при ошибках
+        function handleFallbackData() {
+            hideAllLoading();
+            showAllContent();
+            showError('statsError', 'Используются демонстрационные данные');
+        }
+
+        // Обновление статистики
+        function updateStatistics() {
+            document.getElementById('totalStudents').textContent = students.length;
+            document.getElementById('activeStudents').textContent = students.filter(s => 
+                s.status && s.status.toLowerCase().includes('актив')
+            ).length;
+            document.getElementById('totalQuizzes').textContent = quizzes.length;
+            
+            // Средний прогресс студентов
+            const avgProgress = students.length > 0 ? 
+                students.reduce((sum, student) => sum + (student.progress || 0), 0) / students.length : 0;
+            document.getElementById('avgScore').textContent = Math.round(avgProgress) + '%';
+        }
+
+        // Отображение таблицы студентов
+        function renderStudentsTable() {
+            const tbody = document.getElementById('studentsTableBody');
+            tbody.innerHTML = '';
+            
+            students.forEach(student => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${student.name || 'Неизвестно'}</td>
+                    <td>${student.points || 0}</td>
+                    <td>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: ${student.progress || 0}%"></div>
+                        </div>
+                        <small>${student.progress || 0}%</small>
+                    </td>
+                    <td>${student.status || 'Не указан'}</td>
+                `;
+                tbody.appendChild(row);
+            });
+        }
+
+        // Отображение списка тестов
+        function renderQuizList() {
+            const quizList = document.getElementById('quizList');
+            quizList.innerHTML = '';
+            
+            if (quizzes.length === 0) {
+                quizList.innerHTML = '<p>Тесты еще не добавлены</p>';
+                return;
+            }
+            
+            quizzes.forEach(quiz => {
+                const quizItem = document.createElement('div');
+                quizItem.className = 'quiz-item';
+                quizItem.innerHTML = `
+                    <div class="quiz-info">
+                        <h3>${quiz.title || 'Без названия'}</h3>
+                        <p>${quiz.description || 'Без описания'} | ${quiz.points || 0} баллов | ${getDifficultyText(quiz.difficulty)}</p>
+                        <div class="quiz-stats">
+                            <span class="stat"><i class="fas fa-users"></i> ${quiz.students_passed || 0} студентов прошли</span>
+                            <span class="stat"><i class="fas fa-star"></i> Средний балл: ${quiz.avg_score || 0}%</span>
+                        </div>
+                    </div>
+                    <div class="quiz-actions">
+                        <button class="action-btn edit-btn" onclick="editQuiz(${quiz.id})">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                        <button class="action-btn delete-btn" onclick="deleteQuiz(${quiz.id})">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
+                `;
+                quizList.appendChild(quizItem);
+            });
+        }
+
+        // Получение текстового представления сложности
+        function getDifficultyText(difficulty) {
+            const difficulties = {
+                'easy': 'Легкий',
+                'medium': 'Средний',
+                'hard': 'Сложный'
+            };
+            return difficulties[difficulty] || 'Неизвестно';
+        }
+
+        // Показать ошибку
+        function showError(elementId, message) {
+            const errorElement = document.getElementById(elementId);
+            errorElement.textContent = message;
+            errorElement.style.display = 'block';
+            
+            // Автоматически скрыть через 5 секунд
+            setTimeout(() => {
+                errorElement.style.display = 'none';
+            }, 5000);
+        }
+
+        // Показать успешное сообщение
+        function showSuccess(message) {
+            const successElement = document.getElementById('formSuccess');
+            successElement.textContent = message;
+            successElement.style.display = 'block';
+            
+            // Автоматически скрыть через 3 секунды
+            setTimeout(() => {
+                successElement.style.display = 'none';
+            }, 3000);
+        }
+
+        // Добавление нового теста
+        function addNewQuiz() {
+            const title = document.getElementById('quizTitle').value;
+            const description = document.getElementById('quizDescription').value;
+            const points = parseInt(document.getElementById('quizPoints').value);
+            const difficulty = document.getElementById('quizDifficulty').value;
+            
+            const newQuiz = {
+                id: quizzes.length > 0 ? Math.max(...quizzes.map(q => q.id)) + 1 : 1,
+                title,
+                description,
+                points,
+                difficulty,
+                students_passed: 0,
+                avg_score: 0,
+                created: new Date().toLocaleDateString('ru-RU')
+            };
+            
+            quizzes.push(newQuiz);
+            renderQuizList();
+            updateStatistics();
+            saveToLocalStorage();
+            
+            // Очистка формы
+            document.getElementById('quizForm').reset();
+            
+            showSuccess('Тест успешно добавлен! Данные сохранены в браузере.');
+        }
+
+        // Редактирование теста
+        function editQuiz(quizId) {
+            const quiz = quizzes.find(q => q.id === quizId);
+            if (quiz) {
+                document.getElementById('quizTitle').value = quiz.title;
+                document.getElementById('quizDescription').value = quiz.description;
+                document.getElementById('quizPoints').value = quiz.points;
+                document.getElementById('quizDifficulty').value = quiz.difficulty;
+                
+                // Удаляем старый тест
+                quizzes = quizzes.filter(q => q.id !== quizId);
+                
+                showSuccess('Тест загружен для редактирования. Заполните форму и нажмите "Создать тест" для сохранения изменений.');
+            }
+        }
+
+        // Удаление теста
+        function deleteQuiz(quizId) {
+            if (confirm('Вы уверены, что хотите удалить этот тест?')) {
+                quizzes = quizzes.filter(q => q.id !== quizId);
+                renderQuizList();
+                updateStatistics();
+                saveToLocalStorage();
+                
+                showSuccess('Тест успешно удален!');
+            }
+        }
+    </script>
+</body>
+</html>
